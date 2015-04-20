@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import csv
+import csv, sys
 from datetime import datetime
 
-csvfile = open('cookies_sorted.csv', 'r')
-reader = csv.DictReader(csvfile, delimiter=';', fieldnames=['date', 'uid'])
+def main(input_file, output_file):
+    csvfile = open(input_file, 'r')
+    reader = csv.DictReader(csvfile, delimiter=';', fieldnames=['date', 'uid'])
 
-def main():
     counter = 0
     uids = {}
     dt_tpl = '%Y-%m-%d'
@@ -13,8 +13,8 @@ def main():
         uid = int(line['uid'])
         uids.setdefault(uid, [])
         uids[uid].append(line['date'])
-        # if counter > 300000:
-        #     break
+        if counter > 3000:
+            break
         counter += 1
 
     summary = [(datetime.strptime(dates[-1], dt_tpl) - datetime.strptime(dates[0], dt_tpl)).days for dates in uids.values()]
@@ -31,10 +31,17 @@ def main():
         sum = acc_count_of_uids[index]
 
     # print zip(uniq_days, acc_count_of_uids[::-1])
-    with open('cookies_lifetime.csv', 'w') as output:
+    with open(output_file, 'w') as output:
         writer = csv.writer(output, delimiter=',')
         writer.writerows(zip(uniq_days, acc_count_of_uids[::-1]))
-
+    print 'input file: ' + input_file
+    print 'output file: ' + output_file
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 3:
+        input_file, output_file = sys.argv[1:]
+    else:
+        input_file = 'cookies_sorted.csv'
+        output_file = 'cookies_lifetime.csv'
+
+    main(input_file, output_file)

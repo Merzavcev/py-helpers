@@ -13,8 +13,8 @@ def main(input_file, output_file):
         uid = int(line['uid'])
         uids.setdefault(uid, [])
         uids[uid].append(line['date'])
-        if counter > 3000:
-            break
+        # if counter > 3000:
+        #     break
         counter += 1
 
     summary = [(datetime.strptime(dates[-1], dt_tpl) - datetime.strptime(dates[0], dt_tpl)).days for dates in uids.values()]

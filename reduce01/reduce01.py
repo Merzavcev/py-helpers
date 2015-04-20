@@ -24,7 +24,7 @@ def main():
     # print summary
     # print zip(uniq_days, count_of_uids)
 
-    acc_count_of_uids = count_of_uids[:]
+    acc_count_of_uids = count_of_uids[::-1]
     sum = 0
     for index, val in enumerate(count_of_uids):
         acc_count_of_uids[index] += sum
